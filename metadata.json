@@ -1,0 +1,6 @@
+{
+  "name": "NextEdit",
+  "description": "NextEdit - Admin website and content management portal with live site overview, metrics, and blog management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
