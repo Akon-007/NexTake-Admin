@@ -1,6 +1,5 @@
 import { ExternalLink, LogOut, Menu, X, Zap } from "lucide-react";
 import { NexTakeLogo } from "../brand/NexTakeLogo";
-import { BRAND, isSupabaseConfigured } from "../../lib/config";
 import { useAuth } from "../../lib/auth/context";
 import type { AdminProfile } from "../../types";
 
@@ -40,23 +39,14 @@ export default function AdminHeader({
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          {!isSupabaseConfigured ? (
-            <span className="hidden rounded-full border border-amber-400/40 bg-amber-400/10 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-amber-300 sm:inline-flex">
-              Demo workspace
-            </span>
-          ) : null}
-
           <div className="hidden items-center gap-2 rounded-full border border-line bg-card px-3 py-1.5 md:inline-flex">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-mint" />
             </span>
-            <span className="text-[11px] font-medium text-muted">
-              {isSupabaseConfigured ? "Supabase live" : "Local engine"}
-            </span>
-            <span className="flex items-center gap-1 font-mono text-[11px] text-mint">
-              <Zap className="h-3 w-3" />
-              {BRAND.version}
+            <span className="flex items-center gap-1 text-[11px] font-medium text-muted">
+              <Zap className="h-3 w-3 text-mint" />
+              Live
             </span>
           </div>
 

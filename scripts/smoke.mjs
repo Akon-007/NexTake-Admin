@@ -112,7 +112,7 @@ clickText("Continue");
 await wait(1200);
 assert(text().includes("Verify your identity"), "step two is shown");
 
-const codeMatch = text().match(/Your verification code is (\d{6})/);
+const codeMatch = text().match(/Verification code:\s*(\d{6})/);
 assert(Boolean(codeMatch), "a 6-digit code was dispatched");
 
 console.log("\n4. Wrong code is rejected");

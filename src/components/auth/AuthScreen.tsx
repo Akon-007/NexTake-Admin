@@ -8,7 +8,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useAuth } from "../../lib/auth/context";
-import { BRAND, isSupabaseConfigured } from "../../lib/config";
+import { BRAND } from "../../lib/config";
 import { validateEmail, validatePassword, validateVerificationCode } from "../../lib/validation";
 import { NexTakeLogo } from "../brand/NexTakeLogo";
 import BrandImage from "../brand/BrandImage";
@@ -130,8 +130,8 @@ export default function AuthScreen() {
                 </h1>
                 <p className="text-[12px] leading-relaxed text-muted">
                   {step === "credentials"
-                    ? "Credentials are checked by the Supabase auth service. No admin secrets are stored in this app."
-                    : `We sent a 6-digit code to ${verification?.email ?? "your inbox"}. Enter it to unlock the console.`}
+                    ? "Sign in to manage your newsroom."
+                    : `Enter the 6-digit code sent to ${verification?.email ?? "your inbox"}.`}
                 </p>
               </div>
 
@@ -167,7 +167,7 @@ export default function AuthScreen() {
                     htmlFor="auth-password"
                     required
                     error={fieldErrors.password}
-                    hint="Minimum 8 characters. Checked server-side by the auth provider."
+                    hint="Minimum 8 characters."
                   >
                     <TextInput
                       id="auth-password"
@@ -192,10 +192,6 @@ export default function AuthScreen() {
                       : "Continue"}
                   </Button>
 
-                  <p className="flex items-center justify-center gap-1.5 text-center text-[11px] text-muted-deep">
-                    <ShieldCheck className="h-3.5 w-3.5 text-mint" />
-                    Step two delivers a time-limited code to your registered email.
-                  </p>
                 </form>
               ) : (
                 <div className="space-y-5">
@@ -231,7 +227,7 @@ export default function AuthScreen() {
                     className="w-full"
                     icon={status === "verifying" ? undefined : <ShieldCheck className="h-4 w-4" />}
                   >
-                    {status === "verifying" ? "Verifying…" : "Verify and enter console"}
+                    {status === "verifying" ? "Verifying…" : "Verify and continue"}
                   </Button>
 
                   <div className="flex items-center justify-between gap-3 border-t border-line pt-4">
@@ -259,9 +255,8 @@ export default function AuthScreen() {
 
                   {verification?.devCode ? (
                     <div className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-3.5 py-3 text-[12px] leading-relaxed text-amber-200">
-                      <p className="font-semibold">Demo mode — no email was sent.</p>
-                      <p className="font-mono text-[13px]">
-                        Your verification code is {verification.devCode}
+                      <p className="font-mono text-[13px] font-semibold">
+                        Verification code: {verification.devCode}
                       </p>
                     </div>
                   ) : null}
@@ -270,14 +265,6 @@ export default function AuthScreen() {
             </div>
           </div>
 
-          {!isSupabaseConfigured ? (
-            <p className="mt-4 text-center text-[11px] leading-relaxed text-muted-deep">
-              Supabase is not configured — the console is running against a local
-              demo workspace. Add <code className="font-mono text-muted">VITE_SUPABASE_URL</code>{" "}
-              and <code className="font-mono text-muted">VITE_SUPABASE_ANON_KEY</code> to
-              connect the real backend.
-            </p>
-          ) : null}
         </div>
       </main>
 
@@ -287,7 +274,7 @@ export default function AuthScreen() {
             © {new Date().getFullYear()} {BRAND.name}. All rights reserved.
           </span>
           <span className="font-mono">
-            {BRAND.contactEmail} · {BRAND.version}
+            {BRAND.contactEmail}
           </span>
         </div>
       </footer>

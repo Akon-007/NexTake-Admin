@@ -17,7 +17,7 @@ export default function LogoutModal({
       open={open}
       onClose={onClose}
       title="End this session?"
-      subtitle="You will need your password and a fresh email code to return."
+      subtitle="You will need to sign in again to continue."
       size="md"
       footer={
         <>

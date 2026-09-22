@@ -43,7 +43,7 @@ export default function DashboardHome() {
       value: String(stats.live.length),
       change: `${stats.scheduled.length} scheduled`,
       positive: true,
-      technicalDetail: `${articles.length} records in the shared table`,
+      technicalDetail: `${articles.length} stories in the library`,
       progressPercent:
         articles.length === 0
           ? 0
@@ -189,7 +189,7 @@ export default function DashboardHome() {
                 Latest on the wire
               </h2>
               <p className="text-[11px] text-muted-deep">
-                Newest records from the shared articles table
+                Newest stories in your library
               </p>
             </div>
             <button
@@ -288,7 +288,7 @@ export default function DashboardHome() {
             <EmptyState
               icon={<Activity className="h-5 w-5" />}
               title="No activity yet"
-              description="Publishes, edits and deletions are recorded here once the audit table is wired up."
+              description="Publishes, edits and deletions are recorded here."
             />
           ) : (
             <ul className="space-y-3.5">

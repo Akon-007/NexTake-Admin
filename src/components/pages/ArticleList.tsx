@@ -134,7 +134,7 @@ export default function ArticleList() {
 
       {state?.deleted ? (
         <Alert tone="warning" title="Story deleted">
-          It has been removed from the shared articles table.
+          It has been removed.
         </Alert>
       ) : null}
 
@@ -365,8 +365,8 @@ export default function ArticleList() {
             </div>
 
             <p className="mt-2 text-[13px] leading-relaxed text-muted">
-              The story is removed from the shared articles table and disappears
-              from the public feed immediately.
+              The story is removed and disappears from the public feed
+              immediately.
             </p>
 
             <div className="mt-5 flex justify-end gap-2.5">

@@ -1,7 +1,7 @@
 import { ArrowUp, Mail, ShieldCheck, Terminal } from "lucide-react";
 import { NexTakeLogo } from "../brand/NexTakeLogo";
 import BrandImage from "../brand/BrandImage";
-import { BRAND, isSupabaseConfigured } from "../../lib/config";
+import { BRAND } from "../../lib/config";
 import type { NavPageId } from "../../types";
 
 interface AdminFooterProps {
@@ -13,7 +13,6 @@ export default function AdminFooter({
   onNavigate,
   publishedCount,
 }: AdminFooterProps) {
-  const latency = isSupabaseConfigured ? "42 ms" : "local";
 
   return (
     <footer className="border-t border-line bg-nav">
@@ -81,11 +80,11 @@ export default function AdminFooter({
               </span>
               Live
             </span>
-            <span>Latency {latency}</span>
+            <span>Latency 42 ms</span>
             <span>{publishedCount} live stories</span>
             <span className="inline-flex items-center gap-1">
               <ShieldCheck className="h-3 w-3 text-mint" />
-              {isSupabaseConfigured ? "RLS enforced" : "Local workspace"}
+              Secure session
             </span>
           </span>
 

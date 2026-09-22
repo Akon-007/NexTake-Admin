@@ -180,7 +180,7 @@ export default function ArticleEditor({ articleId }: { articleId?: string }) {
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) {
       setSaveError(
-        "Fix the highlighted fields before saving — the server enforces the same rules."
+        "Fix the highlighted fields before saving."
       );
       return;
     }
@@ -242,8 +242,7 @@ export default function ArticleEditor({ articleId }: { articleId?: string }) {
             ) : null}
           </div>
           <p className="mt-1 text-[12px] text-muted-deep">
-            Every field here maps to a column the public NexTake blog reads — no
-            separate content source.
+            Everything saved here appears on the public NexTake blog.
           </p>
         </div>
 
@@ -698,9 +697,7 @@ export default function ArticleEditor({ articleId }: { articleId?: string }) {
               <div className="max-h-48 space-y-1.5 overflow-y-auto rounded-xl border border-line bg-surface p-2.5">
                 {companies.length === 0 ? (
                   <p className="px-1 py-2 text-[11px] text-muted-deep">
-                    No company profiles yet. Add them to the{" "}
-                    <code className="font-mono text-muted">companies</code>{" "}
-                    table.
+                    No company profiles yet.
                   </p>
                 ) : (
                   companies.map((company) => {
@@ -745,7 +742,7 @@ export default function ArticleEditor({ articleId }: { articleId?: string }) {
         open={confirmDelete}
         onClose={() => setConfirmDelete(false)}
         title="Delete this story?"
-        subtitle="This removes the record from the shared articles table."
+        subtitle="This story will be removed permanently."
         size="md"
         footer={
           <>

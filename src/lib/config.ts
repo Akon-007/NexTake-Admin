@@ -23,7 +23,6 @@ export const BRAND = {
   name: "NexTake",
   slogan: "TECHNOLOGY NEWS. INTELLIGENTLY CURATED.",
   contactEmail: "nextakeafrica@gmail.com",
-  version: "1.0.0-admin",
 } as const;
 
 /**
