@@ -26,8 +26,12 @@ export const BRAND = {
   version: "1.0.0-admin",
 } as const;
 
-/** Verification codes issued by Supabase are time-limited (default 10 min). */
-export const VERIFICATION_CODE_TTL_SECONDS = 600;
+/**
+ * Lifetime of the emailed verification code, in seconds. Supabase's default
+ * OTP expiry is one hour; override it here if the project is tuned shorter.
+ */
+export const VERIFICATION_CODE_TTL_SECONDS =
+  Number(env.VITE_VERIFICATION_TTL_SECONDS ?? 3600) || 3600;
 /** Client-side resend throttle — mirrors Supabase's own rate limiting. */
 export const RESEND_COOLDOWN_SECONDS = 45;
 

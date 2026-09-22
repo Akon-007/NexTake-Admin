@@ -207,7 +207,7 @@ export default function AuthScreen() {
                             ? `Expires in ${Math.floor(secondsLeft / 60)}:${String(
                                 secondsLeft % 60
                               ).padStart(2, "0")}`
-                            : "Code expired — request a new one"}
+                            : "Code may have expired — resend if it fails"}
                       </p>
                     )}
                   </div>

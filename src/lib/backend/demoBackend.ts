@@ -7,7 +7,6 @@ import type {
   Company,
   SiteSettings,
 } from "../../types";
-import { VERIFICATION_CODE_TTL_SECONDS } from "../config";
 import { DEFAULT_SETTINGS } from "./mappers";
 import {
   fail,
@@ -33,6 +32,9 @@ const KEY_SESSION = "nextake.demo.session";
 const KEY_ACTIVITY = "nextake.demo.activity";
 const KEY_CODE = "nextake.demo.code";
 const KEY_SUBSCRIBERS = "nextake.demo.subscribers";
+
+/** Demo codes are short-lived so the outbox panel is easy to reason about. */
+const DEMO_CODE_TTL_SECONDS = 600;
 
 interface DemoSession {
   id: string;
@@ -157,11 +159,11 @@ export const demoBackend: Backend = {
       const record: DemoCode = {
         email,
         code,
-        expiresAt: Date.now() + VERIFICATION_CODE_TTL_SECONDS * 1000,
+        expiresAt: Date.now() + DEMO_CODE_TTL_SECONDS * 1000,
       };
       write(KEY_CODE, record);
       return ok({
-        expiresInSeconds: VERIFICATION_CODE_TTL_SECONDS,
+        expiresInSeconds: DEMO_CODE_TTL_SECONDS,
         devCode: code,
       });
     },
