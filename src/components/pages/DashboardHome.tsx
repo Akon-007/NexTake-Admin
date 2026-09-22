@@ -1,303 +1,320 @@
-import { 
-  Plus, 
-  Globe, 
-  TrendingUp, 
-  Eye, 
-  Sparkles, 
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import {
   Activity,
-  Layers,
   ArrowRight,
-  FileText
+  FileText,
+  Globe,
+  Plus,
+  Radio,
+  Sparkles,
+  TrendingUp,
 } from "lucide-react";
-import type { Article, NavPageId, SystemMetric, ActivityItem } from "../../types";
+import { useCms } from "../../lib/store/context";
+import { isLive } from "../../lib/visibility";
+import { useAuth } from "../../lib/auth/context";
+import type { SystemMetric } from "../../types";
+import Button from "../ui/Button";
+import { EmptyState, LoadingBlock } from "../ui/Feedback";
+import { Pill, StatusBadge } from "../ui/StatusBadge";
 
-interface DashboardHomeProps {
-  articles: Article[];
-  metrics: SystemMetric[];
-  activities: ActivityItem[];
-  onNavigate: (page: NavPageId) => void;
-  onOpenNewArticleModal: () => void;
-}
+export default function DashboardHome() {
+  const navigate = useNavigate();
+  const { profile } = useAuth();
+  const { articles, activity, loading, error } = useCms();
 
-export default function DashboardHome({
-  articles,
-  metrics,
-  activities,
-  onNavigate,
-  onOpenNewArticleModal,
-}: DashboardHomeProps) {
-  const publishedCount = articles.filter(a => a.status === 'published').length;
-  const draftCount = articles.filter(a => a.status === 'draft').length;
-  const totalViews = articles.reduce((sum, a) => sum + a.views, 0);
+  const stats = useMemo(() => {
+    const live = articles.filter((article) => isLive(article));
+    const drafts = articles.filter((article) => article.status === "draft");
+    const scheduled = articles.filter(
+      (article) => article.status === "scheduled"
+    );
+    const hero = articles.filter((article) => article.heroPriority !== null);
+    const breaking = articles.filter((article) => article.isBreaking);
+    const digest = articles.filter((article) => article.inDailyEdit);
+    const views = articles.reduce((sum, article) => sum + article.views, 0);
+
+    return { live, drafts, scheduled, hero, breaking, digest, views };
+  }, [articles]);
+
+  const metrics: SystemMetric[] = [
+    {
+      label: "Live stories",
+      value: String(stats.live.length),
+      change: `${stats.scheduled.length} scheduled`,
+      positive: true,
+      technicalDetail: `${articles.length} records in the shared table`,
+      progressPercent:
+        articles.length === 0
+          ? 0
+          : Math.round((stats.live.length / articles.length) * 100),
+    },
+    {
+      label: "Drafts on desk",
+      value: String(stats.drafts.length),
+      change: "Needs edit",
+      positive: stats.drafts.length === 0,
+      technicalDetail: "Saved privately to the CMS",
+      progressPercent:
+        articles.length === 0
+          ? 0
+          : Math.round((stats.drafts.length / articles.length) * 100),
+    },
+    {
+      label: "Hero slots filled",
+      value: `${stats.hero.length}/5`,
+      change: stats.breaking.length > 0 ? "Breaking active" : "No alert",
+      positive: stats.hero.length > 0,
+      technicalDetail: "Priority 1 leads the carousel",
+      progressPercent: Math.round((stats.hero.length / 5) * 100),
+    },
+    {
+      label: "Total reads",
+      value: stats.views >= 1000
+        ? `${(stats.views / 1000).toFixed(1)}K`
+        : String(stats.views),
+      change: "All time",
+      positive: true,
+      technicalDetail: `${stats.digest.length} in The Daily Edit`,
+      progressPercent: Math.min(100, Math.round((stats.views / 50000) * 100)),
+    },
+  ];
+
+  if (loading && articles.length === 0) {
+    return <LoadingBlock label="Loading the desk…" />;
+  }
 
   return (
-    <div id="dashboard-home-page" className="space-y-8 bg-white text-[#071A2B]">
-      
-      {/* Welcome Top Banner (Selected Navy Feature Section) */}
-      <section 
-        id="dashboard-hero"
-        className="rounded-2xl bg-[#071A2B] text-white p-6 sm:p-8 border border-[#0f2c45] shadow-sm relative overflow-hidden"
-      >
-        <div className="pointer-events-none absolute -right-16 -top-16 w-64 h-64 bg-[#7FFFD4]/10 rounded-full blur-3xl" />
-        
-        <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0d263d] border border-[#7FFFD4]/30 text-xs font-semibold text-[#7FFFD4]">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>NextEdit Portal Active</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#7FFFD4] animate-ping" />
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-              Welcome back, <span className="text-[#7FFFD4]">Promise</span>
+    <div className="space-y-6">
+      {/* Welcome banner */}
+      <section className="relative overflow-hidden rounded-2xl border border-line bg-card p-6 sm:p-8">
+        <div className="pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full bg-mint/10 blur-3xl" />
+
+        <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div className="max-w-2xl space-y-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-mint/30 bg-mint/10 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-mint">
+              <Sparkles className="h-3 w-3" />
+              NexTake console
+              <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-mint" />
+            </span>
+
+            <h1 className="font-display text-2xl font-extrabold text-ink sm:text-3xl">
+              Welcome back,{" "}
+              <span className="text-mint">
+                {profile?.fullName?.split(" ")[0] ?? "Editor"}
+              </span>
             </h1>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              Your website and technical blog are running smoothly. You have <strong className="text-white font-semibold">{draftCount} pending drafts</strong> and <strong className="text-white font-semibold">{publishedCount} live articles</strong> reaching over {totalViews.toLocaleString()} readers.
+
+            <p className="text-[13px] leading-relaxed text-muted">
+              You have{" "}
+              <strong className="font-semibold text-ink">
+                {stats.drafts.length} draft
+                {stats.drafts.length === 1 ? "" : "s"}
+              </strong>{" "}
+              on the desk and{" "}
+              <strong className="font-semibold text-ink">
+                {stats.live.length} live stories
+              </strong>{" "}
+              reaching {stats.views.toLocaleString()} reads. Changes made here go
+              straight to the public wire.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              id="dashboard-new-article-btn"
-              onClick={onOpenNewArticleModal}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#7FFFD4] text-[#071A2B] font-bold text-sm shadow-md shadow-[#7FFFD4]/20 hover:bg-[#68f0c5] active:scale-[0.98] transition-all cursor-pointer"
+          <div className="flex flex-wrap gap-2.5">
+            <Button
+              icon={<Plus className="h-4 w-4" />}
+              onClick={() => navigate("/articles/new")}
             >
-              <Plus className="w-4 h-4 stroke-[2.5]" />
-              <span>Create Article</span>
-            </button>
-            <button
-              id="dashboard-manage-website-btn"
-              onClick={() => onNavigate('website')}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0f2c45] text-white hover:bg-[#163857] border border-[#1d476e] text-sm font-semibold transition-all cursor-pointer"
+              New story
+            </Button>
+            <Button
+              variant="secondary"
+              icon={<Globe className="h-4 w-4 text-mint" />}
+              onClick={() => navigate("/website")}
             >
-              <Globe className="w-4 h-4 text-[#7FFFD4]" />
-              <span>Manage Website</span>
-            </button>
+              Feed placement
+            </Button>
           </div>
         </div>
+
+        {error ? (
+          <p className="relative mt-4 text-[12px] text-rose-400">{error}</p>
+        ) : null}
       </section>
 
-      {/* Metrics Row (White background cards with navy borders and aquamarine accents) */}
-      <section aria-label="System Metrics" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {metrics.map((metric, idx) => (
+      {/* Metrics */}
+      <section
+        aria-label="Newsroom metrics"
+        className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+      >
+        {metrics.map((metric) => (
           <div
-            key={idx}
-            id={`metric-card-${idx}`}
-            className="rounded-2xl bg-white border border-[#071A2B]/15 p-5 shadow-xs hover:border-[#071A2B]/30 transition-all space-y-3"
+            key={metric.label}
+            className="space-y-3 rounded-2xl border border-line bg-card p-5"
           >
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                {metric.label}
-              </span>
-              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-[#7FFFD4]/20 text-[#071A2B] border border-[#7FFFD4]/40">
-                <TrendingUp className="w-3 h-3 text-[#071A2B]" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="nt-mono text-muted">{metric.label}</span>
+              <span className="inline-flex items-center gap-1 rounded-full border border-mint/30 bg-mint/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-mint">
+                <TrendingUp className="h-3 w-3" />
                 {metric.change}
               </span>
             </div>
 
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold text-[#071A2B] tracking-tight">
-                {metric.value}
-              </span>
-            </div>
+            <p className="font-display text-3xl font-extrabold tracking-tight text-ink">
+              {metric.value}
+            </p>
 
-            {/* Progress indicator with Aquamarine accent */}
-            <div className="space-y-1 pt-1">
-              <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                <div 
-                  className="bg-[#7FFFD4] h-full rounded-full"
+            <div className="space-y-1.5">
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-navy">
+                <div
+                  className="h-full rounded-full bg-mint transition-all"
                   style={{ width: `${metric.progressPercent}%` }}
                 />
               </div>
-              <div className="flex items-center justify-between text-[11px] text-slate-500">
-                <span className="font-mono text-[#071A2B]">{metric.technicalDetail}</span>
-                <span className="font-semibold text-[#071A2B]">{metric.progressPercent}%</span>
+              <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.08em] text-muted-deep">
+                <span>{metric.technicalDetail}</span>
+                <span>{metric.progressPercent}%</span>
               </div>
             </div>
           </div>
         ))}
       </section>
 
-      {/* Two Column Layout: Recent Articles & Live Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        {/* Left Column: Recent Articles (8 cols) */}
-        <section className="lg:col-span-8 rounded-2xl bg-white border border-[#071A2B]/15 p-6 shadow-xs space-y-5">
-          <div className="flex items-center justify-between pb-4 border-b border-[#071A2B]/10">
+      <div className="grid gap-6 xl:grid-cols-3">
+        {/* Recent stories */}
+        <section className="space-y-4 rounded-2xl border border-line bg-card p-5 xl:col-span-2">
+          <header className="flex items-center justify-between gap-3 border-b border-line pb-4">
             <div>
-              <h2 className="text-lg font-bold text-[#071A2B] tracking-tight">
-                Recent Content & Articles
+              <h2 className="font-display text-base font-extrabold text-ink">
+                Latest on the wire
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Overview of latest published materials and active drafts in NextEdit
+              <p className="text-[11px] text-muted-deep">
+                Newest records from the shared articles table
               </p>
             </div>
             <button
-              onClick={() => onNavigate('blog')}
-              className="inline-flex items-center gap-1 text-xs font-bold text-[#071A2B] hover:text-[#0a3154] cursor-pointer group"
+              type="button"
+              onClick={() => navigate("/articles")}
+              className="inline-flex items-center gap-1 text-[11px] font-bold text-mint"
             >
-              <span>View all ({articles.length})</span>
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+              View all ({articles.length})
+              <ArrowRight className="h-3.5 w-3.5" />
             </button>
-          </div>
+          </header>
 
-          <div className="space-y-3.5">
-            {articles.slice(0, 4).map((article) => (
-              <div
-                key={article.id}
-                className="group flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-xl border border-[#071A2B]/10 hover:border-[#071A2B]/30 hover:bg-slate-50/50 transition-all gap-4"
-              >
-                <div className="flex items-start gap-3.5 min-w-0">
-                  <img
-                    src={article.image}
-                    alt={article.title}
-                    className="w-14 h-14 rounded-lg object-cover shrink-0 border border-[#071A2B]/10"
-                  />
-                  <div className="min-w-0 space-y-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-[#7FFFD4]/25 text-[#071A2B] border border-[#7FFFD4]/50">
-                        {article.category}
-                      </span>
-                      {article.isNew && (
-                        <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-[#7FFFD4] text-[#071A2B] tracking-wide">
-                          NEW
+          {articles.length === 0 ? (
+            <EmptyState
+              icon={<FileText className="h-5 w-5" />}
+              title="No stories yet"
+              description="Create the first story and it will flow to the public feed automatically."
+              action={
+                <Button
+                  size="sm"
+                  onClick={() => navigate("/articles/new")}
+                  icon={<Plus className="h-3.5 w-3.5" />}
+                >
+                  New story
+                </Button>
+              }
+            />
+          ) : (
+            <ul className="space-y-3">
+              {articles.slice(0, 6).map((article) => (
+                <li
+                  key={article.id}
+                  className="flex flex-col gap-3 rounded-xl border border-line bg-surface p-3.5 transition-colors hover:border-line-strong sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div className="flex min-w-0 items-start gap-3">
+                    <img
+                      src={article.coverImageUrl}
+                      alt=""
+                      className="h-14 w-14 shrink-0 rounded-lg object-cover ring-1 ring-line"
+                    />
+                    <div className="min-w-0 space-y-1.5">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="rounded-md bg-mint/15 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-mint">
+                          {article.category}
                         </span>
-                      )}
-                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${
-                        article.status === 'published' 
-                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                          : 'bg-amber-50 text-amber-700 border border-amber-200'
-                      }`}>
-                        {article.status.toUpperCase()}
-                      </span>
-                    </div>
-
-                    <h3 className="text-sm font-bold text-[#071A2B] truncate group-hover:text-purple-900 transition-colors">
-                      {article.title}
-                    </h3>
-
-                    <div className="flex items-center gap-3 text-xs text-slate-500">
-                      <span>{article.author}</span>
-                      <span>•</span>
-                      <span>{article.date}</span>
-                      <span>•</span>
-                      <span className="inline-flex items-center gap-1">
-                        <Eye className="w-3 h-3" />
-                        {article.views.toLocaleString()} views
-                      </span>
+                        <StatusBadge status={article.status} />
+                        {article.isBreaking ? (
+                          <Pill tone="rose">
+                            <Radio className="h-3 w-3" />
+                            Breaking
+                          </Pill>
+                        ) : null}
+                      </div>
+                      <h3 className="truncate text-[13px] font-bold text-ink">
+                        {article.title}
+                      </h3>
+                      <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted-deep">
+                        {article.sourceName} ·{" "}
+                        {article.publishedAt
+                          ? new Date(article.publishedAt).toLocaleDateString(
+                              undefined,
+                              { day: "2-digit", month: "short" }
+                            )
+                          : "unscheduled"}{" "}
+                        · {article.views.toLocaleString()} views
+                      </p>
                     </div>
                   </div>
-                </div>
 
-                <div className="flex items-center gap-2 sm:self-center shrink-0">
-                  <button
-                    onClick={() => onNavigate('blog')}
-                    className="px-3 py-1.5 text-xs font-semibold text-[#071A2B] bg-slate-100 hover:bg-[#7FFFD4] hover:text-[#071A2B] rounded-lg transition-colors cursor-pointer"
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => navigate(`/articles/${article.id}`)}
                   >
                     Edit
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="pt-2 flex items-center justify-between">
-            <button
-              onClick={onOpenNewArticleModal}
-              className="inline-flex items-center gap-2 text-xs font-bold text-[#071A2B] hover:text-[#0c2f50] cursor-pointer"
-            >
-              <Plus className="w-3.5 h-3.5 text-[#071A2B]" />
-              <span>Write a new blog post</span>
-            </button>
-            <span className="text-xs text-slate-400 font-mono">
-              Auto-synced with Git repository
-            </span>
-          </div>
-        </section>
-
-        {/* Right Column: Live Activity Feed & Quick Controls (4 cols) */}
-        <section className="lg:col-span-4 space-y-6">
-          
-          {/* Quick Page Jump Card */}
-          <div className="rounded-2xl bg-white border border-[#071A2B]/15 p-5 shadow-xs space-y-4">
-            <h2 className="text-base font-bold text-[#071A2B] flex items-center gap-2">
-              <Layers className="w-4 h-4 text-[#071A2B]" />
-              Quick Navigation
-            </h2>
-            <div className="space-y-2">
-              <button
-                id="jump-to-website-btn"
-                onClick={() => onNavigate('website')}
-                className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-[#7FFFD4]/15 border border-[#071A2B]/10 hover:border-[#7FFFD4]/50 text-left transition-all cursor-pointer group"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#071A2B] text-[#7FFFD4] flex items-center justify-center">
-                    <Globe className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-[#071A2B] block">Website Structure</span>
-                    <span className="text-[11px] text-slate-500">Edit hero & layout</span>
-                  </div>
-                </div>
-                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-[#071A2B] group-hover:translate-x-0.5 transition-all" />
-              </button>
-
-              <button
-                id="jump-to-blog-btn"
-                onClick={() => onNavigate('blog')}
-                className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-[#7FFFD4]/15 border border-[#071A2B]/10 hover:border-[#7FFFD4]/50 text-left transition-all cursor-pointer group"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#071A2B] text-[#7FFFD4] flex items-center justify-center">
-                    <FileText className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-[#071A2B] block">Blog & Editor</span>
-                    <span className="text-[11px] text-slate-500">Draft, edit & publish</span>
-                  </div>
-                </div>
-                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-[#071A2B] group-hover:translate-x-0.5 transition-all" />
-              </button>
-            </div>
-          </div>
-
-          {/* Activity Log */}
-          <div className="rounded-2xl bg-white border border-[#071A2B]/15 p-5 shadow-xs space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-base font-bold text-[#071A2B] flex items-center gap-2">
-                <Activity className="w-4 h-4 text-[#071A2B]" />
-                Recent Audit Log
-              </h2>
-              <span className="text-[10px] font-mono text-[#071A2B] font-semibold bg-[#7FFFD4]/30 px-2 py-0.5 rounded">
-                Live
-              </span>
-            </div>
-
-            <div className="space-y-3.5">
-              {activities.map((act) => (
-                <div key={act.id} className="flex items-start gap-3 text-xs pb-3 border-b border-[#071A2B]/5 last:border-b-0 last:pb-0">
-                  <div className="w-2 h-2 rounded-full bg-[#7FFFD4] mt-1.5 shrink-0 ring-4 ring-[#7FFFD4]/20" />
-                  <div className="space-y-0.5 min-w-0">
-                    <p className="font-semibold text-[#071A2B]">
-                      {act.action}
-                    </p>
-                    <p className="text-slate-500 truncate">
-                      {act.target}
-                    </p>
-                    <div className="flex items-center gap-2 text-[10px] text-slate-400">
-                      <span>{act.timestamp}</span>
-                      <span>•</span>
-                      <span>{act.user}</span>
-                    </div>
-                  </div>
-                </div>
+                  </Button>
+                </li>
               ))}
-            </div>
-          </div>
-
+            </ul>
+          )}
         </section>
 
-      </div>
+        {/* Activity */}
+        <section className="space-y-4 rounded-2xl border border-line bg-card p-5">
+          <header className="flex items-center justify-between gap-3 border-b border-line pb-4">
+            <h2 className="flex items-center gap-2 font-display text-base font-extrabold text-ink">
+              <Activity className="h-4 w-4 text-mint" />
+              Audit log
+            </h2>
+            <span className="rounded-md bg-mint/15 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-mint ring-1 ring-mint/30">
+              Live
+            </span>
+          </header>
 
+          {activity.length === 0 ? (
+            <EmptyState
+              icon={<Activity className="h-5 w-5" />}
+              title="No activity yet"
+              description="Publishes, edits and deletions are recorded here once the audit table is wired up."
+            />
+          ) : (
+            <ul className="space-y-3.5">
+              {activity.map((item) => (
+                <li
+                  key={item.id}
+                  className="flex items-start gap-3 border-b border-line pb-3 last:border-b-0 last:pb-0"
+                >
+                  <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-mint ring-4 ring-mint/15" />
+                  <div className="min-w-0 space-y-0.5">
+                    <p className="text-[12px] font-semibold text-ink">
+                      {item.action}
+                    </p>
+                    <p className="truncate text-[11px] text-muted-deep">
+                      {item.target}
+                    </p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted-deep">
+                      {item.timestamp} · {item.user}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </div>
     </div>
   );
 }

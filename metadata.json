@@ -1,6 +1,6 @@
 {
-  "name": "NextEdit",
-  "description": "NextEdit - Admin website and content management portal with live site overview, metrics, and blog management.",
+  "name": "NexTake Admin",
+  "description": "NexTake admin console — authenticated editorial CMS for curating, publishing and placing technology news on the NexTake wire.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": []
 }
