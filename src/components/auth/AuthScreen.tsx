@@ -269,12 +269,9 @@ export default function AuthScreen() {
       </main>
 
       <footer className="border-t border-line bg-nav">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 py-4 text-[11px] text-muted-deep sm:flex-row sm:px-6">
+        <div className="mx-auto flex max-w-6xl items-center justify-center px-4 py-4 text-[11px] text-muted-deep sm:px-6">
           <span>
             © {new Date().getFullYear()} {BRAND.name}. All rights reserved.
-          </span>
-          <span className="font-mono">
-            {BRAND.contactEmail}
           </span>
         </div>
       </footer>
