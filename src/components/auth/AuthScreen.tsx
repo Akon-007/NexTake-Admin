@@ -11,6 +11,7 @@ import { useAuth } from "../../lib/auth/context";
 import { BRAND, isSupabaseConfigured } from "../../lib/config";
 import { validateEmail, validatePassword, validateVerificationCode } from "../../lib/validation";
 import { NexTakeLogo } from "../brand/NexTakeLogo";
+import BrandImage from "../brand/BrandImage";
 import Button from "../ui/Button";
 import { Alert } from "../ui/Feedback";
 import { Field, TextInput } from "../ui/Field";
@@ -91,6 +92,17 @@ export default function AuthScreen() {
           </span>
         </div>
       </header>
+
+      {/* Brand banner — /public/header.png, cropped to a slim band here */}
+      <div className="mx-auto w-full max-w-md px-4 pt-6 sm:max-w-xl sm:px-6">
+        <BrandImage
+          src="/header.png"
+          alt={`${BRAND.name} — ${BRAND.slogan}`}
+          loading="eager"
+          className="h-24 w-full rounded-2xl object-cover ring-1 ring-line sm:h-32"
+          placeholderClassName="h-24 rounded-2xl bg-gradient-to-r from-navy via-card-alt to-navy ring-1 ring-line sm:h-32"
+        />
+      </div>
 
       <main className="flex flex-1 items-center justify-center px-4 py-10 sm:px-6">
         <div className="w-full max-w-md">

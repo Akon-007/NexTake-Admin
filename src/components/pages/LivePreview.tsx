@@ -6,7 +6,8 @@ import { isLive } from "../../lib/visibility";
 import { backend } from "../../lib/backend";
 import type { NewsletterFrequency } from "../../lib/backend";
 import { isEmail } from "../../lib/validation";
-import { NexTakeLogo } from "../brand/NexTakeLogo";
+import { NexTakeLogo, NexTakeMobileBar } from "../brand/NexTakeLogo";
+import BrandImage from "../brand/BrandImage";
 import Button from "../ui/Button";
 import { EmptyState } from "../ui/Feedback";
 import type { Article } from "../../types";
@@ -70,24 +71,31 @@ export default function LivePreview() {
         </span>
       </div>
 
-      {/* Public header */}
+      {/* Public header — desktop banner + mobile compact lockup */}
       <header className="border-b border-line bg-nav">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
-          <NexTakeLogo subtitle={settings.slogan} />
-          <nav className="hidden items-center gap-6 md:flex">
+        <BrandImage
+          src="/header.png"
+          alt={`${settings.siteName} — ${settings.slogan}`}
+          loading="eager"
+          className="hidden w-full sm:block"
+          placeholderClassName="hidden h-28 bg-gradient-to-r from-navy via-card-alt to-navy sm:block lg:h-36"
+        />
+
+        <NexTakeMobileBar slogan={settings.slogan} />
+
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 border-t border-line px-4 py-2.5 sm:px-6">
+          <nav className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
             {settings.navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                className="font-mono text-[11px] uppercase tracking-[0.08em] text-muted transition-colors hover:text-mint"
+                className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted transition-colors hover:text-mint sm:text-[11px]"
               >
                 {link.label}
               </a>
             ))}
           </nav>
-        </div>
-        <div className="border-t border-line bg-canvas/40 py-1.5">
-          <p className="mx-auto max-w-7xl truncate px-4 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-deep sm:px-6">
+          <p className="truncate font-mono text-[10px] uppercase tracking-[0.18em] text-muted-deep">
             {settings.slogan}
           </p>
         </div>
@@ -167,6 +175,14 @@ export default function LivePreview() {
 
       {/* Public footer */}
       <footer className="border-t border-line bg-nav">
+        {/* Brand showcase — /public/footer.png (1800×500) */}
+        <BrandImage
+          src="/footer.png"
+          alt={`${settings.siteName} brand showcase`}
+          className="w-full"
+          placeholderClassName="bg-gradient-to-r from-navy via-card-alt to-navy h-24 sm:h-32"
+        />
+
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-2">
           <div className="space-y-3">
             <NexTakeLogo subtitle={settings.slogan} />

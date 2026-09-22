@@ -1,5 +1,6 @@
 import { ArrowUp, Mail, ShieldCheck, Terminal } from "lucide-react";
 import { NexTakeLogo } from "../brand/NexTakeLogo";
+import BrandImage from "../brand/BrandImage";
 import { BRAND, isSupabaseConfigured } from "../../lib/config";
 import type { NavPageId } from "../../types";
 
@@ -16,6 +17,14 @@ export default function AdminFooter({
 
   return (
     <footer className="border-t border-line bg-nav">
+      {/* Brand showcase — /public/footer.png */}
+      <BrandImage
+        src="/footer.png"
+        alt={`${BRAND.name} brand showcase`}
+        className="h-20 w-full object-cover sm:h-28"
+        placeholderClassName="h-20 bg-gradient-to-r from-navy via-card-alt to-navy sm:h-28"
+      />
+
       <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6">
         <div className="grid gap-8 pb-8 md:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-3">

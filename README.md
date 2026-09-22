@@ -136,10 +136,21 @@ publishing.
 * Body: **Plus Jakarta Sans** 400/500/600, line-height 1.6.
 * Technical text (category pills, dates, reading times, telemetry, slogan,
   ticker): **JetBrains Mono**.
-* The NT mark (`public/icon.svg`, `public/favicon.svg`,
-  `src/components/brand/NexTakeLogo.tsx`) keeps the original geometry: navy
-  vertical pillar, 95px lower diagonal mint ribbon, angled negative-space
-  channel and the mint accent polygon folded over the T's crossbar.
+* Brand artwork (drop the files straight into `public/` — they are picked up
+  automatically):
+
+  | File | Size | Used for |
+  | --- | --- | --- |
+  | `icon.png` | square | UI logo lockup, browser tab and touch icon (falls back to `icon.svg`) |
+  | `header.png` | 1800×420 | Desktop banner on the public header and the sign-in screen |
+  | `footer.png` | 1800×500 | Brand showcase across the top of the public and admin footers |
+
+  `public/icon.svg` holds the scalable NT mark — navy vertical pillar, 95px
+  lower diagonal mint ribbon, angled negative-space channel and the mint
+  accent polygon folded over the T's crossbar.
+* Mobile keeps the compact lockup: small square icon plus the NEXTAKE
+  wordmark with the AKE portion in mint, above a news-wire bar carrying the
+  slogan.
 
 ---
 

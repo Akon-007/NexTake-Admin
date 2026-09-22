@@ -1,67 +1,17 @@
+import { useState } from "react";
+import BrandImage from "./BrandImage";
+
 /**
- * NexTake "NT" mark — vector geometric logo.
+ * NexTake logo lockup.
  *
- * Geometry (unchanged from the original brand asset):
- *  - dark navy vertical pillar (the N stem)
- *  - wide 95px lower diagonal mint ribbon stroke
- *  - angled negative-space channel between the N and the T
- *  - mint accent polygon folded over the upper horizontal crossbar of the T
+ * Uses the supplied brand asset `/public/icon.png` (rounded corners and a
+ * hover micro-animation, matching the main blog's Navbar treatment) and falls
+ * back to the scalable vector mark `/public/icon.svg` when the PNG is absent.
  */
-
-interface NexTakeMarkProps {
-  size?: number;
-  className?: string;
-  /** Fill used for the angled negative-space channel (defaults to canvas navy). */
-  channelClassName?: string;
-  title?: string;
-}
-
-export function NexTakeMark({
-  size = 32,
-  className = "",
-  channelClassName = "fill-canvas",
-  title,
-}: NexTakeMarkProps) {
-  return (
-    <svg
-      viewBox="0 0 128 128"
-      width={size}
-      height={size}
-      className={className}
-      role={title ? "img" : "presentation"}
-      aria-hidden={title ? undefined : true}
-      aria-label={title}
-      focusable="false"
-    >
-      {title ? <title>{title}</title> : null}
-
-      {/* N — vertical pillar */}
-      <polygon points="12,8 30,8 30,120 12,120" fill="#040A12" />
-      {/* N — diagonal */}
-      <polygon points="30,8 48,8 76,120 58,120" fill="#040A12" />
-      {/* N — right pillar */}
-      <polygon points="58,8 76,8 76,120 58,120" fill="#040A12" />
-
-      {/* T — upper horizontal crossbar */}
-      <polygon points="88,8 126,8 126,27 88,27" fill="#040A12" />
-      {/* T — stem */}
-      <polygon points="99,27 115,27 115,120 99,120" fill="#040A12" />
-
-      {/* Mint accent polygon folded over the upper crossbar */}
-      <polygon points="88,8 126,8 115,27 99,27" fill="#3DF2AC" />
-
-      {/* Wide 95px lower diagonal ribbon stroke */}
-      <polygon points="12,97 107,97 119,118 24,118" fill="#00F2AA" />
-
-      {/* Angled negative-space channel */}
-      <polygon points="76,8 88,8 80,120 68,120" className={channelClassName} />
-    </svg>
-  );
-}
 
 interface NexTakeWordmarkProps {
   className?: string;
-  /** `mintSuffix` renders the trailing "AKE" in mint (used on the mobile bar). */
+  /** `mintSuffix` renders the trailing "AKE" in mint (mobile compact bar). */
   mintSuffix?: boolean;
 }
 
@@ -80,6 +30,7 @@ export function NexTakeWordmark({
 }
 
 interface NexTakeLogoProps {
+  /** Rendered icon size in pixels. */
   size?: number;
   className?: string;
   wordmarkClassName?: string;
@@ -89,18 +40,32 @@ interface NexTakeLogoProps {
 }
 
 export function NexTakeLogo({
-  size = 34,
+  size = 36,
   className = "",
   wordmarkClassName = "text-[15px]",
   showWordmark = true,
   mintSuffix = true,
   subtitle,
 }: NexTakeLogoProps) {
+  const [iconSrc, setIconSrc] = useState("/icon.png");
+
   return (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
-      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-navy ring-1 ring-line">
-        <NexTakeMark size={size * 0.62} className="rounded-[6px]" />
+    <span className={`group inline-flex items-center gap-2.5 ${className}`}>
+      <span
+        className="inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[10px] bg-navy ring-1 ring-line"
+        style={{ width: size, height: size }}
+      >
+        <img
+          src={iconSrc}
+          alt="NexTake"
+          width={size}
+          height={size}
+          decoding="async"
+          onError={() => setIconSrc("/icon.svg")}
+          className="h-full w-full rounded-[10px] object-cover transition-transform duration-300 group-hover:scale-[1.06]"
+        />
       </span>
+
       {showWordmark ? (
         <span className="flex flex-col leading-none">
           <NexTakeWordmark
@@ -116,4 +81,29 @@ export function NexTakeLogo({
   );
 }
 
+/**
+ * Mobile header lockup: small square icon plus the compact NEXTAKE wordmark
+ * with the AKE portion in mint, exactly as the main blog renders it.
+ */
+export function NexTakeMobileBar({ slogan }: { slogan?: string }) {
+  return (
+    <div className="sm:hidden">
+      <div className="flex items-center gap-2 px-4 py-3">
+        <NexTakeLogo
+          size={28}
+          showWordmark
+          wordmarkClassName="text-[13px]"
+          mintSuffix
+        />
+      </div>
+      {slogan ? (
+        <p className="truncate border-t border-line px-4 py-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-deep">
+          {slogan}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+export { BrandImage };
 export default NexTakeLogo;
