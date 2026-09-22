@@ -46,9 +46,20 @@ npm run dev
 
 Then, in Supabase:
 
-1. **SQL Editor → run `supabase/migrations/0001_nextake_admin.sql`**
-   (idempotent — safe on a project that already hosts the blog).
-2. Run `supabase/seed.sql` for reference companies and site copy.
+1. **Push the schema** (Supabase CLI, or paste the SQL manually):
+
+   ```bash
+   npm run db:migrate   # runs `supabase db push` — requires `supabase link`
+   ```
+
+   Or paste `supabase/migrations/0001_nextake_admin.sql` into the SQL Editor
+   (the file is idempotent — safe on a project that already hosts the blog).
+
+2. **Seed reference data** — run the contents of `supabase/seed.sql` in the
+   SQL Editor (companies, site copy, default settings). For a local Supabase
+   stack, `npm run db:seed` runs `supabase db reset --local` which applies
+   both migrations and seeds in one step.
+
 3. **Authentication → Users → Add user** and set the admin's password.
 4. Promote them:
 

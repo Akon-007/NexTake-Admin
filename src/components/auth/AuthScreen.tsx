@@ -254,10 +254,19 @@ export default function AuthScreen() {
                   </div>
 
                   {verification?.devCode ? (
-                    <div className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-3.5 py-3 text-[12px] leading-relaxed text-amber-200">
-                      <p className="font-mono text-[13px] font-semibold">
-                        Verification code: {verification.devCode}
-                      </p>
+                    <div className="rounded-xl border border-dashed border-amber-400/40 bg-amber-400/10 p-3.5">
+                      <div className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.08em] text-amber-300/80">
+                        <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-400" />
+                        Demo workspace — no email sent
+                      </div>
+                      <div className="flex items-baseline justify-between gap-3">
+                        <span className="text-[11px] leading-tight text-amber-200/90">
+                          Your verification code:
+                        </span>
+                        <span className="font-mono text-[15px] font-bold text-amber-100">
+                          {verification.devCode}
+                        </span>
+                      </div>
                     </div>
                   ) : null}
                 </div>

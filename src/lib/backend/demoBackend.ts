@@ -15,7 +15,7 @@ import {
   type BackendResult,
   type VerificationDispatch,
 } from "./types";
-import { relativeTime } from "./supabaseBackend";
+import { relativeTime } from "./utils";
 
 /**
  * Local demo backend.
@@ -74,7 +74,7 @@ function write(key: string, value: unknown) {
 
 function readArticles(): Article[] {
   const stored = read<Article[] | null>(KEY_ARTICLES, null);
-  if (stored && stored.length >= 0) return stored;
+  if (stored && stored.length > 0) return stored;
   write(KEY_ARTICLES, DEMO_ARTICLES);
   return DEMO_ARTICLES;
 }

@@ -16,5 +16,5 @@ export const backend: Backend = isSupabaseConfigured
 export { isSupabaseConfigured };
 export * from "./types";
 export type { NewsletterFrequency } from "./types";
-export { relativeTime } from "./supabaseBackend";
+export { relativeTime } from "./utils";
 export { DEFAULT_SETTINGS } from "./mappers";

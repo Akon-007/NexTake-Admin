@@ -15,6 +15,7 @@ interface AdminSidebarProps {
   onCloseMobileMenu: () => void;
   articleCount: number;
   draftCount: number;
+  scheduledCount: number;
 }
 
 const NAV_ITEMS: Array<{
@@ -56,6 +57,7 @@ export default function AdminSidebar({
   onCloseMobileMenu,
   articleCount,
   draftCount,
+  scheduledCount,
 }: AdminSidebarProps) {
   const handle = (page: NavPageId) => {
     onNavigate(page);
@@ -143,7 +145,7 @@ export default function AdminSidebar({
             <div className="flex items-center justify-between">
               <span className="nt-mono text-muted-deep">Pipeline</span>
               <span className="font-mono text-[10px] text-mint">
-                {draftCount} pending
+                {draftCount + scheduledCount} pending
               </span>
             </div>
             <div className="h-1.5 w-full overflow-hidden rounded-full bg-navy">
@@ -154,15 +156,22 @@ export default function AdminSidebar({
                     articleCount === 0
                       ? 0
                       : Math.round(
-                          ((articleCount - draftCount) / articleCount) * 100
+                          ((articleCount - draftCount - scheduledCount) / articleCount) * 100
                         )
                   }%`,
                 }}
               />
             </div>
-            <p className="text-[11px] text-muted-deep">
-              Drafts and scheduled stories waiting on the desk.
-            </p>
+            <div className="flex items-center justify-between text-[11px] text-muted-deep">
+              <div className="flex items-center gap-1.5">
+                <span className="inline-block h-2 w-2 rounded-sm bg-amber-400/70" />
+                <span>{draftCount} draft{draftCount === 1 ? "" : "s"}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="inline-block h-2 w-2 rounded-sm bg-sky-400/70" />
+                <span>{scheduledCount} scheduled{scheduledCount === 1 ? "" : "s"}</span>
+              </div>
+            </div>
           </div>
         </div>
 

@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "smoke": "npm run build && node scripts/smoke.mjs"
+    "smoke": "npm run build && node scripts/smoke.mjs",
+    "db:migrate": "supabase db push",
+    "db:seed": "supabase db reset --local 2>nul || supabase db push && echo Run supabase/seed.sql manually in the SQL Editor for hosted projects"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.116.0",

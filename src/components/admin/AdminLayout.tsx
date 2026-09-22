@@ -50,7 +50,11 @@ export default function AdminLayout() {
   };
 
   const draftCount = articles.filter(
-    (article) => article.status === "draft" || article.status === "scheduled"
+    (article) => article.status === "draft"
+  ).length;
+
+  const scheduledCount = articles.filter(
+    (article) => article.status === "scheduled"
   ).length;
 
   const publishedCount = articles.filter((article) => isLive(article)).length;
@@ -71,6 +75,7 @@ export default function AdminLayout() {
         onCloseMobileMenu={() => setMobileMenuOpen(false)}
         articleCount={articles.length}
         draftCount={draftCount}
+        scheduledCount={scheduledCount}
       />
 
       <main className="lg:pl-64">

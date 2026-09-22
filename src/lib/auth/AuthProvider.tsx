@@ -114,9 +114,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
       setError(null);
       setNotice(
-        isResend
-          ? `A new verification code is on its way to ${email}.`
-          : `We emailed a verification code to ${email}.`
+        isResend ? `A new verification code is on its way to ${email}.` : null
       );
       startCooldown(RESEND_COOLDOWN_SECONDS);
       return true;
