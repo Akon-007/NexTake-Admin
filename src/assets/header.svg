@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 160" width="100%" height="100%">
+  <defs>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F5B8" />
+      <stop offset="100%" stop-color="#14F1B2" />
+    </linearGradient>
+    <linearGradient id="facetGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#E2E8F0" stop-opacity="0.8" />
+    </linearGradient>
+    <linearGradient id="facetDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.75" />
+      <stop offset="100%" stop-color="#CBD5E1" stop-opacity="0.5" />
+    </linearGradient>
+  </defs>
+
+  <!-- Isometric Monogram Mark NT -->
+  <g transform="translate(10, 12)">
+    <!-- Top-left vibrant cyan facet (signature accent) -->
+    <polygon points="62,18 104,38 68,48 26,28" fill="url(#cyanGrad)" />
+    
+    <!-- Left vertical 'N' stem and face -->
+    <polygon points="26,28 68,48 68,102 26,82" fill="url(#facetGrad)" />
+    
+    <!-- Central diagonal fold -->
+    <polygon points="68,48 104,38 104,90 68,102" fill="url(#facetDark)" />
+    
+    <!-- Lower shadow/depth accents -->
+    <polygon points="26,82 68,102 68,114 26,94" fill="#FFFFFF" fill-opacity="0.3" />
+    <polygon points="68,102 104,90 104,102 68,114" fill="#FFFFFF" fill-opacity="0.2" />
+
+    <!-- Right top facet of T -->
+    <polygon points="104,38 132,24 132,74 104,90" fill="url(#facetGrad)" fill-opacity="0.9" />
+  </g>
+
+  <!-- NEXTAKE Wordmark -->
+  <!-- NEXT in Pure White -->
+  <text x="180" y="86" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-weight="900" font-size="74" fill="#FFFFFF" letter-spacing="-1">NEXT</text>
+  
+  <!-- AKE in Electric Turquoise / Mint Cyan -->
+  <text x="395" y="86" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-weight="900" font-size="74" fill="#00F5B8" letter-spacing="-1">AKE</text>
+
+  <!-- Subtitle Tagline -->
+  <text x="182" y="116" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="14" fill="#E2E8F0" fill-opacity="0.85" letter-spacing="4.5">TECHNOLOGY NEWS. INTELLIGENTLY CURATED.</text>
+</svg>

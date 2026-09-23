@@ -1,6 +1,6 @@
 {
-  "name": "NexTake Admin",
-  "description": "NexTake admin console — authenticated editorial CMS for curating, publishing and placing technology news on the NexTake wire.",
+  "name": "NexTake",
+  "description": "NexTake - Admin website and content management portal with live site overview, metrics, and blog management.",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
