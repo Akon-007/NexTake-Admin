@@ -14,7 +14,8 @@ import {
   Search,
   X,
   FileText,
-  ArrowRight
+  ArrowRight,
+  Send,
 } from "lucide-react";
 import type { WebsiteConfig, Article } from "../../types";
 import NexTakeLogo from "../NexTakeLogo";
@@ -35,7 +36,7 @@ export default function WebsiteManager({
   onUpdateArticle,
 }: WebsiteManagerProps) {
   const [form, setForm] = useState<WebsiteConfig>(config);
-  const [savedSuccess, setSavedSuccess] = useState(false);
+  const [configPublishMessage, setConfigPublishMessage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
 
   // Search & filter state for the blog posts box
@@ -63,11 +64,42 @@ export default function WebsiteManager({
   });
   const [postSaveSuccessMessage, setPostSaveSuccessMessage] = useState<string | null>(null);
 
+  const showConfigPublishMessage = (message: string) => {
+    setConfigPublishMessage(message);
+    setTimeout(() => setConfigPublishMessage(null), 3000);
+  };
+
   const handleSaveConfig = (e: React.FormEvent) => {
     e.preventDefault();
     onUpdateConfig(form);
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 2500);
+    showConfigPublishMessage("Full website configuration published successfully.");
+  };
+
+  const handlePublishHeroSection = () => {
+    onUpdateConfig({
+      ...config,
+      siteName: form.siteName,
+      tagline: form.tagline,
+      heroBadge: form.heroBadge,
+      heroTitle: form.heroTitle,
+      heroSubtitle: form.heroSubtitle,
+    });
+
+    showConfigPublishMessage("Hero section sent live separately.");
+  };
+
+  const handlePublishDailyEditSection = () => {
+    onUpdateConfig({
+      ...config,
+      newsletterEnabled: form.newsletterEnabled,
+      dailyEditLabel: form.dailyEditLabel,
+      newsletterHeadline: form.newsletterHeadline,
+      newsletterDescription: form.newsletterDescription,
+      newsletterInputPlaceholder: form.newsletterInputPlaceholder,
+      newsletterButtonText: form.newsletterButtonText,
+    });
+
+    showConfigPublishMessage("The Daily Edit section sent live separately.");
   };
 
   const handleReset = () => {
@@ -200,11 +232,11 @@ export default function WebsiteManager({
       </div>
 
       {/* Global Notifications */}
-      {savedSuccess && (
+      {configPublishMessage && (
         <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-between text-xs font-semibold animate-slide-down">
           <div className="flex items-center gap-2.5">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span>Website configuration updated successfully! Changes published live.</span>
+            <span>{configPublishMessage}</span>
           </div>
         </div>
       )}
@@ -379,7 +411,17 @@ export default function WebsiteManager({
                   </p>
                 </div>
               </div>
-              <span className="text-xs font-mono text-slate-400">Settings</span>
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-mono text-slate-400">Hero</span>
+                <button
+                  type="button"
+                  onClick={handlePublishHeroSection}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#071A2B] px-3 py-1.5 text-xs font-bold text-white transition-all hover:bg-[#0f2c45] cursor-pointer"
+                >
+                  <Send className="w-3.5 h-3.5 text-[#7FFFD4]" />
+                  <span>Send Hero Live</span>
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -503,7 +545,7 @@ export default function WebsiteManager({
                 </p>
               </div>
 
-              {/* Newsletter Callout Toggle */}
+              {/* The Daily Edit Toggle */}
               <div 
                 onClick={() => setForm({ ...form, newsletterEnabled: !form.newsletterEnabled })}
                 className={`p-4 rounded-xl border transition-all cursor-pointer flex flex-col justify-between space-y-3 ${
@@ -514,7 +556,7 @@ export default function WebsiteManager({
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-wider text-[#071A2B]">
-                    Newsletter Callout
+                    The Daily Edit
                   </span>
                   <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
                     form.newsletterEnabled ? 'bg-[#071A2B] text-[#7FFFD4]' : 'bg-slate-200 text-slate-400'
@@ -523,13 +565,110 @@ export default function WebsiteManager({
                   </div>
                 </div>
                 <p className="text-xs text-slate-600">
-                  Embed the newsletter subscription module inside the footer.
+                  Show the Daily Edit signup module on the public blog page.
                 </p>
               </div>
             </div>
           </section>
 
-          {/* Section 3: Navigation Links Management */}
+          {/* Section 3: The Daily Edit */}
+          <section className="rounded-2xl bg-white border border-[#071A2B]/15 p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#071A2B]/10">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-[#071A2B] text-[#7FFFD4] flex items-center justify-center font-bold">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-[#071A2B]">
+                    The Daily Edit Section
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    Configure the Daily Edit signup block shown on the public blog page footer.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-mono text-slate-400">Signup module</span>
+                <button
+                  type="button"
+                  onClick={handlePublishDailyEditSection}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#071A2B] px-3 py-1.5 text-xs font-bold text-white transition-all hover:bg-[#0f2c45] cursor-pointer"
+                >
+                  <Send className="w-3.5 h-3.5 text-[#7FFFD4]" />
+                  <span>Send Daily Edit Live</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600 block">
+                  Daily Edit Label
+                </label>
+                <input
+                  type="text"
+                  value={form.dailyEditLabel}
+                  onChange={(e) => setForm({ ...form, dailyEditLabel: e.target.value })}
+                  placeholder="The Daily Edit"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#071A2B]/20 text-[#071A2B] text-sm font-semibold focus:outline-none focus:border-[#071A2B] focus:ring-2 focus:ring-[#7FFFD4]/30"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600 block">
+                  Button Text
+                </label>
+                <input
+                  type="text"
+                  value={form.newsletterButtonText}
+                  onChange={(e) => setForm({ ...form, newsletterButtonText: e.target.value })}
+                  placeholder="Subscribe"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#071A2B]/20 text-[#071A2B] text-sm font-semibold focus:outline-none focus:border-[#071A2B] focus:ring-2 focus:ring-[#7FFFD4]/30"
+                />
+              </div>
+
+              <div className="space-y-1.5 md:col-span-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600 block">
+                  Headline
+                </label>
+                <input
+                  type="text"
+                  value={form.newsletterHeadline}
+                  onChange={(e) => setForm({ ...form, newsletterHeadline: e.target.value })}
+                  placeholder="Get The Daily Edit in your inbox"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#071A2B]/20 text-[#071A2B] text-sm font-semibold focus:outline-none focus:border-[#071A2B] focus:ring-2 focus:ring-[#7FFFD4]/30"
+                />
+              </div>
+
+              <div className="space-y-1.5 md:col-span-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600 block">
+                  Description
+                </label>
+                <textarea
+                  rows={3}
+                  value={form.newsletterDescription}
+                  onChange={(e) => setForm({ ...form, newsletterDescription: e.target.value })}
+                  placeholder="Write the short supporting copy shown beneath the Daily Edit headline."
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#071A2B]/20 text-[#071A2B] text-sm font-normal focus:outline-none focus:border-[#071A2B] focus:ring-2 focus:ring-[#7FFFD4]/30"
+                />
+              </div>
+
+              <div className="space-y-1.5 md:col-span-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600 block">
+                  Email Input Placeholder
+                </label>
+                <input
+                  type="text"
+                  value={form.newsletterInputPlaceholder}
+                  onChange={(e) => setForm({ ...form, newsletterInputPlaceholder: e.target.value })}
+                  placeholder="Enter your work email"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#071A2B]/20 text-[#071A2B] text-sm font-normal focus:outline-none focus:border-[#071A2B] focus:ring-2 focus:ring-[#7FFFD4]/30"
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Section 4: Navigation Links Management */}
           <section className="rounded-2xl bg-white border border-[#071A2B]/15 p-6 sm:p-8 shadow-xs space-y-6">
             <div className="flex items-center justify-between pb-4 border-b border-[#071A2B]/10">
               <div className="flex items-center gap-2.5">
@@ -601,7 +740,7 @@ export default function WebsiteManager({
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#7FFFD4] text-[#071A2B] font-bold text-sm shadow-md shadow-[#7FFFD4]/20 hover:bg-[#68f0c5] active:scale-[0.98] transition-all cursor-pointer"
             >
               <Save className="w-4 h-4" />
-              <span>Save & Publish Changes</span>
+              <span>Publish Full Website Config</span>
             </button>
           </div>
 
@@ -714,6 +853,39 @@ export default function WebsiteManager({
                   ))}
                 </div>
               </div>
+
+              {form.newsletterEnabled && (
+                <div className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-900 to-slate-800 px-6 py-8 text-white shadow-xs sm:px-8">
+                  <div className="max-w-3xl space-y-4">
+                    <span className="inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-violet-300">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      {form.dailyEditLabel}
+                    </span>
+                    <div className="space-y-2">
+                      <h3 className="text-2xl font-black tracking-tight text-white">
+                        {form.newsletterHeadline}
+                      </h3>
+                      <p className="max-w-2xl text-sm leading-relaxed text-slate-300">
+                        {form.newsletterDescription}
+                      </p>
+                    </div>
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                      <input
+                        type="text"
+                        disabled
+                        value={form.newsletterInputPlaceholder}
+                        className="w-full max-w-md rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-sm text-slate-500"
+                      />
+                      <button
+                        type="button"
+                        className="inline-flex items-center justify-center rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white"
+                      >
+                        {form.newsletterButtonText}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
             </div>
 
