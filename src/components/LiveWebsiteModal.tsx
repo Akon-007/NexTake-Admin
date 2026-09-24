@@ -180,7 +180,14 @@ export default function LiveWebsiteModal({
         </main>
 
         {/* Public Footer */}
-        <Footer />
+        <Footer
+          newsletterEnabled={config.newsletterEnabled}
+          dailyEditLabel={config.dailyEditLabel}
+          newsletterHeadline={config.newsletterHeadline}
+          newsletterDescription={config.newsletterDescription}
+          newsletterInputPlaceholder={config.newsletterInputPlaceholder}
+          newsletterButtonText={config.newsletterButtonText}
+        />
 
       </div>
     </div>

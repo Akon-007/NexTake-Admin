@@ -9,7 +9,11 @@ export const INITIAL_WEBSITE_CONFIG: WebsiteConfig = {
   searchEnabled: true,
   categoryFilterEnabled: true,
   newsletterEnabled: true,
-  newsletterHeadline: "Stay ahead of technology shifts with NexTake",
+  dailyEditLabel: "The Daily Edit",
+  newsletterHeadline: "Get The Daily Edit in your inbox",
+  newsletterDescription: "Join engineers, product builders, and operators getting a sharp daily rundown on trends, launches, and practical technical insights.",
+  newsletterInputPlaceholder: "Enter your work email",
+  newsletterButtonText: "Subscribe",
   primaryCtaText: "Explore Articles",
   navLinks: [
     { label: "Home", href: "#", active: true },

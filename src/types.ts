@@ -25,7 +25,11 @@ export interface WebsiteConfig {
   searchEnabled: boolean;
   categoryFilterEnabled: boolean;
   newsletterEnabled: boolean;
+  dailyEditLabel: string;
   newsletterHeadline: string;
+  newsletterDescription: string;
+  newsletterInputPlaceholder: string;
+  newsletterButtonText: string;
   primaryCtaText: string;
   navLinks: Array<{ label: string; href: string; active?: boolean }>;
 }
